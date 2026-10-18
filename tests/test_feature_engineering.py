@@ -73,3 +73,22 @@ def test_split_chronological_data(sequence_sales_df):
     assert len(splits["test"]) == 10
     assert splits["train"]["date"].max() < splits["val"]["date"].min()
     assert splits["val"]["date"].max() < splits["test"]["date"].min()
+
+
+def test_multi_group_rolling_alignment():
+    """Regression test: Ensure rolling statistics do not misassign values across different series."""
+    df = pd.DataFrame({
+        "store_id": ["STR_B", "STR_B", "STR_A", "STR_A"],
+        "product_id": ["P1", "P1", "P1", "P1"],
+        "date": pd.to_datetime(["2024-01-01", "2024-01-02", "2024-01-01", "2024-01-02"]),
+        "units_sold": [10, 20, 100, 200],
+    })
+    feat_df = create_lag_and_rolling_features(df, lags=[1], windows=[2])
+    
+    # Store A day 2 rolling mean must be 100.0 (from Store A day 1)
+    row_a2 = feat_df[(feat_df["store_id"] == "STR_A") & (feat_df["date"] == "2024-01-02")].iloc[0]
+    assert row_a2["rolling_mean_2"] == 100.0
+    
+    # Store B day 2 rolling mean must be 10.0 (from Store B day 1)
+    row_b2 = feat_df[(feat_df["store_id"] == "STR_B") & (feat_df["date"] == "2024-01-02")].iloc[0]
+    assert row_b2["rolling_mean_2"] == 10.0

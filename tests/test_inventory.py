@@ -85,3 +85,37 @@ def test_evaluate_inventory_row_healthy_no_order():
     assert result["suggested_order_qty"] == 0
     assert result["inventory_status"] in ["Healthy Stock", "Overstock Risk"]
     assert result["stockout_risk"] is False
+
+
+def test_evaluate_inventory_row_zero_demand_boundary():
+    """Verify that zero daily demand does not cause ZeroDivisionError and safely defaults."""
+    result = evaluate_inventory_row(
+        on_hand=10,
+        on_order=0,
+        backorders=0,
+        avg_daily_demand=0.0,
+        std_daily_demand=0.0,
+        lead_time_days=3,
+        review_period=7,
+    )
+    assert result["days_of_supply"] > 0
+    assert result["suggested_order_qty"] >= 0
+    assert result["safety_stock"] >= 2  # Min safety stock buffer
+
+
+def test_evaluate_inventory_row_negative_inputs_clamped():
+    """Verify negative on-hand or on-order inputs are clamped safely to non-negative quantities."""
+    result = evaluate_inventory_row(
+        on_hand=-10,
+        on_order=-5,
+        backorders=-2,
+        avg_daily_demand=5.0,
+        std_daily_demand=1.0,
+        lead_time_days=-3,
+    )
+    assert result["on_hand_stock"] == 0
+    assert result["on_order_stock"] == 0
+    assert result["lead_time_days"] >= 1
+    assert result["inventory_position"] == 0
+    assert result["inventory_status"] == "Critical / Stockout"
+

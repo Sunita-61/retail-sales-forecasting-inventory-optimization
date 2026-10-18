@@ -66,3 +66,13 @@ def test_validate_duplicate_records(valid_sample_df):
     dup_df = pd.concat([valid_sample_df, valid_sample_df.iloc[[0]]], ignore_index=True)
     with pytest.raises(DataValidationError):
         validate_retail_data(dup_df, raise_errors=True)
+
+
+def test_load_raw_data_with_filepath():
+    """Regression test: Ensure load_raw_data accepts Path and str filepaths without NameError."""
+    from src.data.load_data import load_raw_data
+    from src.config import RAW_DATA_FILE
+    df = load_raw_data(str(RAW_DATA_FILE))
+    assert df is not None
+    assert len(df) == 29240
+

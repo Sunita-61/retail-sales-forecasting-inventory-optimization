@@ -1,6 +1,13 @@
 """Script to generate future forecasts and inventory replenishment recommendations."""
 
 import argparse
+from pathlib import Path
+import sys
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from src.data.preprocess import load_processed_data
 from src.forecasting.predict import generate_recursive_future_forecast
 from src.forecasting.train_model import load_best_forecasting_model

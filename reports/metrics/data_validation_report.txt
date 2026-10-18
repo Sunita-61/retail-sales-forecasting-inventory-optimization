@@ -1,0 +1,37 @@
+================================================================================
+SYNTHETIC RETAIL DATA VALIDATION AUDIT REPORT
+Generated: 2026-10-18
+Dataset: data/raw/synthetic_retail_sales.csv
+================================================================================
+
+1. RECORD COUNTS & CARDINALITY
+--------------------------------------------------------------------------------
+- Total Record Count: 29,240 rows
+- Total Columns: 15 columns
+- Unique Stores: 4 ('STR_01', 'STR_02', 'STR_03', 'STR_04')
+- Unique Products: 10 ('PRD_001' to 'PRD_010')
+- Total Time Series (Store x SKU): 40 series
+- Historical Date Range: 2024-01-01 to 2025-12-31 (731 consecutive days per series)
+- Reproducibility Check: PASS (100% bitwise match across all 29,240 rows with seed=42)
+
+2. DATA INTEGRITY & INTEGRITY RULES
+--------------------------------------------------------------------------------
+- Missing Values (Nulls/NaNs): 0 across all 15 columns
+- Duplicate Business Keys [date, store_id, product_id]: 0 duplicates found
+- Negative Sales Quantities (units_sold < 0): 0 violations (Min: 0, Max: 87)
+- Negative Inventory Quantities (on_hand_stock < 0): 0 violations (Min: 0, Max: 182)
+- Invalid Lead Times (lead_time_days <= 0): 0 violations (Range: 2 to 7 days)
+- Stockout Arithmetic Consistency: PASS
+  (units_demanded - units_sold == stockout_units for 29,240 / 29,240 records)
+- Inventory Physical Bounding: PASS
+  (units_sold <= on_hand_stock_prior + stock_received holds universally)
+
+3. SYNTHETIC LABELING AUDIT
+--------------------------------------------------------------------------------
+- Column 'data_source' Value: 'Simulated Synthetic Data - Not Actual Company Records'
+- Synthetic Identification Status: PASS (Explicitly tagged on every record)
+- Proprietary Data Ingestion Risk: NONE (Purely mathematical simulation)
+
+================================================================================
+OVERALL STATUS: PASS — FULLY VALIDATED AND REPRODUCIBLE
+================================================================================

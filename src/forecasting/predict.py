@@ -64,6 +64,9 @@ def generate_recursive_future_forecast(
     future_dates = [last_hist_date + timedelta(days=d) for d in range(1, horizon_days + 1)]
     forecast_rows = []
 
+    # Retrieve empirical validation residual standard deviation for uncertainty band
+    residual_std = float(model_artifact.get("val_residual_std", model_artifact["test_metrics"]["RMSE"]))
+
     # Iterate day-by-day (recursive multi-step)
     for f_date in future_dates:
         day_features_list = []
@@ -137,9 +140,11 @@ def generate_recursive_future_forecast(
             pred_val = float(step_preds[i])
             history_records[(s_id, p_id)][f_date] = pred_val
 
-            # Compute 90% confidence interval: +/- 1.645 * RMSE
-            lower_ci = max(0.0, round(pred_val - 1.645 * rmse, 1))
-            upper_ci = round(pred_val + 1.645 * rmse, 1)
+            # Empirical residual-based uncertainty band (approx. 90% coverage using normal approximation: +/- 1.645 * sigma_resid)
+            half_width = 1.645 * residual_std
+            lower_ci = max(0.0, round(pred_val - half_width, 1))
+            upper_ci = max(lower_ci, round(pred_val + half_width, 1))
+            assert lower_ci <= upper_ci, f"Lower bound ({lower_ci}) exceeded upper bound ({upper_ci})"
 
             forecast_rows.append(
                 {
@@ -152,7 +157,10 @@ def generate_recursive_future_forecast(
                     "forecasted_demand": pred_val,
                     "forecast_lower_90ci": lower_ci,
                     "forecast_upper_90ci": upper_ci,
+                    "forecast_lower_bound": lower_ci,
+                    "forecast_upper_bound": upper_ci,
                     "forecast_revenue": round(pred_val * price, 2),
+                    "uncertainty_interval_method": "Empirical residual uncertainty band (~90% normal approximation)",
                 }
             )
 

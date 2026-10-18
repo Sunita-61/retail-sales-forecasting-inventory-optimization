@@ -69,3 +69,22 @@ def test_compare_models_ranking():
     comparison_df = compare_models(models, X, y, save_csv=False)
     assert comparison_df.iloc[0]["Model"] == "Seasonal Naive"
     assert comparison_df.iloc[0]["WAPE (%)"] == 0.0
+
+
+def test_uncertainty_bounds_ordering():
+    """Verify forecast uncertainty intervals satisfy non-negativity and lower <= upper."""
+    from src.forecasting.predict import generate_recursive_future_forecast
+    from src.forecasting.train_model import load_best_forecasting_model
+    from src.data.preprocess import load_processed_data
+
+    clean_df = load_processed_data()
+    artifact = load_best_forecasting_model()
+    
+    assert "val_residual_std" in artifact
+    assert artifact["val_residual_std"] >= 0
+
+    fc_df = generate_recursive_future_forecast(clean_df.head(2000), model_artifact=artifact, horizon_days=3, save_forecasts=False)
+    assert len(fc_df) > 0
+    assert (fc_df["forecast_lower_bound"] <= fc_df["forecast_upper_bound"]).all()
+    assert (fc_df["forecast_lower_bound"] >= 0).all()
+

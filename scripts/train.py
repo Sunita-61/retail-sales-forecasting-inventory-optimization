@@ -1,6 +1,11 @@
-"""Script to train forecasting models, compare against baselines, and save champion model."""
-
 import argparse
+from pathlib import Path
+import sys
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from src.data.preprocess import load_processed_data
 from src.forecasting.train_model import train_and_select_best_model
 from src.utils.logging_config import setup_logger

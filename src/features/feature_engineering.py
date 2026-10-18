@@ -59,7 +59,7 @@ def create_lag_and_rolling_features(
     if windows is None:
         windows = ROLLING_WINDOWS
 
-    df_sorted = df.sort_values(by=group_keys + ["date"]).copy()
+    df_sorted = df.sort_values(by=group_keys + ["date"]).reset_index(drop=True)
 
     # Lag features
     for lag in lags:
@@ -72,16 +72,11 @@ def create_lag_and_rolling_features(
         shifted_target = df_sorted.groupby(group_keys)[target_col].shift(1)
         df_sorted[f"rolling_mean_{w}"] = (
             shifted_target.groupby([df_sorted[k] for k in group_keys])
-            .rolling(window=w, min_periods=1)
-            .mean()
-            .reset_index(drop=True)
+            .transform(lambda s: s.rolling(window=w, min_periods=1).mean())
         )
         df_sorted[f"rolling_std_{w}"] = (
             shifted_target.groupby([df_sorted[k] for k in group_keys])
-            .rolling(window=w, min_periods=1)
-            .std()
-            .fillna(0)
-            .reset_index(drop=True)
+            .transform(lambda s: s.rolling(window=w, min_periods=1).std().fillna(0))
         )
 
     return df_sorted

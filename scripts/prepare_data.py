@@ -1,6 +1,11 @@
-"""Script to generate, validate, and preprocess retail dataset."""
-
 import argparse
+from pathlib import Path
+import sys
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from src.data.load_data import generate_synthetic_retail_dataset, load_raw_data
 from src.data.preprocess import clean_and_preprocess_data
 from src.data.validate_data import validate_retail_data

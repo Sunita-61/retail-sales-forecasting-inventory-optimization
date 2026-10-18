@@ -1,7 +1,8 @@
 """Synthetic retail sales and inventory data generator and loader."""
 
 from datetime import datetime, timedelta
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Union
 import numpy as np
 import pandas as pd
 
