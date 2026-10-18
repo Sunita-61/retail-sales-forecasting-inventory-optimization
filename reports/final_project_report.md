@@ -86,7 +86,7 @@ Across the 40 SKU-store locations evaluated at the close of 2025:
 ## 6. Verification and Project Delivery Artifacts
 
 * **Source Code Modules**: Clean architecture under `src/` (data, features, forecasting, inventory, visualization, utils).
-* **Automated Test Suite**: 26 unit and integration tests passing (`tests/`).
+* **Automated Test Suite**: 34 unit and integration tests passing (`tests/`).
 * **Interactive Dashboard**: Streamlit app with 4 dedicated pages (`app/`).
 * **Jupyter Notebooks**: 6 complete notebooks covering the entire analytical lifecycle (`notebooks/`).
 * **Documentation**: 6 comprehensive markdown guides under `docs/` and root `README.md`.
