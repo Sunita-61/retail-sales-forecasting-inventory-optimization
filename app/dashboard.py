@@ -89,6 +89,7 @@ col1, col2 = st.columns([3, 1])
 with col1:
     st.markdown('<div class="main-header">Retail Sales Forecasting & Inventory Optimization System</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Autonomous Time-Series Demand Forecasting and Multi-Echelon Inventory Replenishment Platform</div>', unsafe_allow_html=True)
+    st.caption("📅 Historical Data Cutoff: **2025-12-31** | Demonstration Forecast Horizon: **2026-01-01 to 2026-01-30** (30-day post-historical simulation)")
 with col2:
     st.markdown("<br><span class='badge-sim'>SIMULATED RETAIL ENVIRONMENT</span>", unsafe_allow_html=True)
 

@@ -1,34 +1,34 @@
 evaluation_date,store_id,product_id,product_name,category,unit_price,unit_cost,on_hand_stock,on_order_stock,backorders,inventory_position,avg_daily_demand,std_daily_demand,lead_time_days,safety_stock,reorder_point,target_stock,suggested_order_qty,days_of_supply,inventory_status,stockout_risk,estimated_order_cost
-2025-12-31,STR_01,PRD_004,Noise-Cancelling Headphones,Electronics,149.99,85.0,0,0,0,0,10.33,6.76,7,30,103,175,175,0.0,Critical / Stockout,True,14875.0
-2025-12-31,STR_01,PRD_005,Smart Fitness Tracker Band,Electronics,79.99,42.0,0,0,0,0,16.63,11.42,6,47,147,264,264,0.0,Critical / Stockout,True,11088.0
-2025-12-31,STR_01,PRD_007,Stretch Slim-Fit Denim Jeans,Apparel,49.99,22.0,0,0,0,0,23.51,16.28,7,71,236,401,401,0.0,Critical / Stockout,True,8822.0
-2025-12-31,STR_02,PRD_004,Noise-Cancelling Headphones,Electronics,149.99,85.0,0,0,0,0,9.74,6.04,7,27,96,164,164,0.0,Critical / Stockout,True,13940.0
-2025-12-31,STR_02,PRD_007,Stretch Slim-Fit Denim Jeans,Apparel,49.99,22.0,0,0,0,0,17.48,15.03,7,66,189,311,311,0.0,Critical / Stockout,True,6842.0
-2025-12-31,STR_03,PRD_003,Greek Honey Yogurt 500g,Groceries,4.25,2.3,0,0,0,0,32.53,13.4,3,39,137,365,365,0.0,Critical / Stockout,True,839.5
-2025-12-31,STR_03,PRD_006,Classic Cotton Crew T-Shirt,Apparel,19.99,8.5,0,0,0,0,25.72,15.0,5,56,185,365,365,0.0,Critical / Stockout,True,3102.5
-2025-12-31,STR_03,PRD_010,Ultrasonic Aroma Diffuser,Home & Kitchen,29.99,13.0,0,0,0,0,13.76,5.91,5,22,91,188,188,0.0,Critical / Stockout,True,2444.0
-2025-12-31,STR_04,PRD_004,Noise-Cancelling Headphones,Electronics,149.99,85.0,0,0,0,0,9.06,5.46,7,24,88,151,151,0.0,Critical / Stockout,True,12835.0
-2025-12-31,STR_04,PRD_007,Stretch Slim-Fit Denim Jeans,Apparel,49.99,22.0,0,0,0,0,19.91,10.53,7,46,186,325,325,0.0,Critical / Stockout,True,7150.0
-2025-12-31,STR_04,PRD_008,Cast Iron Skillet 10-inch,Home & Kitchen,34.99,16.5,0,0,0,0,10.15,6.68,6,27,88,159,159,0.0,Critical / Stockout,True,2623.5
-2025-12-31,STR_04,PRD_010,Ultrasonic Aroma Diffuser,Home & Kitchen,29.99,13.0,0,0,0,0,14.86,8.77,5,33,108,212,212,0.0,Critical / Stockout,True,2756.0
-2025-12-31,STR_03,PRD_004,Noise-Cancelling Headphones,Electronics,149.99,85.0,1,0,0,1,8.04,4.33,7,19,76,132,131,0.1,Reorder Required,True,11135.0
-2025-12-31,STR_04,PRD_001,Organic Whole Milk 1L,Groceries,3.99,2.2,17,0,0,17,63.08,19.21,2,45,172,613,596,0.3,Reorder Required,True,1311.2
-2025-12-31,STR_02,PRD_001,Organic Whole Milk 1L,Groceries,3.99,2.2,30,0,0,30,72.95,23.29,2,55,201,712,682,0.4,Reorder Required,True,1500.4
-2025-12-31,STR_02,PRD_005,Smart Fitness Tracker Band,Electronics,79.99,42.0,9,0,0,9,14.42,9.83,6,40,127,228,219,0.6,Reorder Required,True,9198.0
-2025-12-31,STR_04,PRD_003,Greek Honey Yogurt 500g,Groceries,4.25,2.3,23,0,0,23,39.12,14.1,3,41,159,433,410,0.6,Reorder Required,True,943.0
-2025-12-31,STR_03,PRD_007,Stretch Slim-Fit Denim Jeans,Apparel,49.99,22.0,11,0,0,11,15.78,10.06,7,44,155,265,254,0.7,Reorder Required,True,5588.0
-2025-12-31,STR_01,PRD_001,Organic Whole Milk 1L,Groceries,3.99,2.2,87,0,0,87,78.73,28.45,2,67,225,776,689,1.1,Reorder Required,True,1515.8
-2025-12-31,STR_01,PRD_002,Artisan Sourdough Bread,Groceries,4.5,2.0,97,0,0,97,67.5,20.52,2,48,183,656,559,1.4,Reorder Required,True,1118.0
-2025-12-31,STR_03,PRD_001,Organic Whole Milk 1L,Groceries,3.99,2.2,90,0,0,90,56.87,19.15,2,45,159,557,467,1.6,Reorder Required,True,1027.4
-2025-12-31,STR_02,PRD_003,Greek Honey Yogurt 500g,Groceries,4.25,2.3,92,0,0,92,43.95,15.26,3,44,176,484,392,2.1,Reorder Required,True,901.6
-2025-12-31,STR_02,PRD_010,Ultrasonic Aroma Diffuser,Home & Kitchen,29.99,13.0,39,0,0,39,17.04,8.49,5,32,118,237,198,2.3,Reorder Required,True,2574.0
-2025-12-31,STR_03,PRD_009,Ceramic Glazed Coffee Mug,Home & Kitchen,12.5,4.5,47,0,0,47,19.91,8.66,4,29,109,249,202,2.4,Reorder Required,True,909.0
-2025-12-31,STR_03,PRD_008,Cast Iron Skillet 10-inch,Home & Kitchen,34.99,16.5,27,0,0,27,9.78,4.28,6,18,77,146,119,2.8,Reorder Required,True,1963.5
-2025-12-31,STR_01,PRD_010,Ultrasonic Aroma Diffuser,Home & Kitchen,29.99,13.0,63,0,0,63,18.8,10.85,5,40,134,266,203,3.4,Reorder Required,True,2639.0
-2025-12-31,STR_01,PRD_003,Greek Honey Yogurt 500g,Groceries,4.25,2.3,173,0,0,173,47.81,18.36,3,53,197,532,359,3.6,Reorder Required,False,825.7
-2025-12-31,STR_04,PRD_005,Smart Fitness Tracker Band,Electronics,79.99,42.0,51,0,0,51,13.2,8.51,6,35,115,207,156,3.9,Reorder Required,True,6552.0
-2025-12-31,STR_01,PRD_008,Cast Iron Skillet 10-inch,Home & Kitchen,34.99,16.5,54,0,0,54,12.99,7.41,6,30,108,199,145,4.2,Reorder Required,True,2392.5
-2025-12-31,STR_02,PRD_006,Classic Cotton Crew T-Shirt,Apparel,19.99,8.5,135,0,0,135,31.77,19.9,5,74,233,456,321,4.2,Reorder Required,True,2728.5
-2025-12-31,STR_04,PRD_006,Classic Cotton Crew T-Shirt,Apparel,19.99,8.5,120,0,0,120,28.7,17.25,5,64,208,409,289,4.2,Reorder Required,True,2456.5
-2025-12-31,STR_04,PRD_009,Ceramic Glazed Coffee Mug,Home & Kitchen,12.5,4.5,104,0,0,104,23.58,9.82,4,33,128,293,189,4.4,Reorder Required,False,850.5
-2025-12-31,STR_02,PRD_008,Cast Iron Skillet 10-inch,Home & Kitchen,34.99,16.5,51,0,0,51,11.3,5.74,6,24,92,171,120,4.5,Reorder Required,True,1980.0
+2025-12-31,STR_01,PRD_004,Noise-Cancelling Headphones,Electronics,149.99,85.0,0,0,0,0,11.7,4.49,7,20,102,184,184,0.0,Critical / Stockout,True,15640.0
+2025-12-31,STR_01,PRD_005,Smart Fitness Tracker Band,Electronics,79.99,42.0,0,0,0,0,19.36,5.38,6,22,139,274,274,0.0,Critical / Stockout,True,11508.0
+2025-12-31,STR_01,PRD_007,Stretch Slim-Fit Denim Jeans,Apparel,49.99,22.0,0,0,0,0,27.41,7.64,7,34,226,418,418,0.0,Critical / Stockout,True,9196.0
+2025-12-31,STR_02,PRD_004,Noise-Cancelling Headphones,Electronics,149.99,85.0,0,0,0,0,10.86,4.15,7,19,96,172,172,0.0,Critical / Stockout,True,14620.0
+2025-12-31,STR_02,PRD_007,Stretch Slim-Fit Denim Jeans,Apparel,49.99,22.0,0,0,0,0,21.07,7.37,7,33,181,328,328,0.0,Critical / Stockout,True,7216.0
+2025-12-31,STR_03,PRD_003,Greek Honey Yogurt 500g,Groceries,4.25,2.3,0,0,0,0,33.79,12.25,3,35,137,373,373,0.0,Critical / Stockout,True,857.9
+2025-12-31,STR_03,PRD_006,Classic Cotton Crew T-Shirt,Apparel,19.99,8.5,0,0,0,0,28.42,8.91,5,33,176,375,375,0.0,Critical / Stockout,True,3187.5
+2025-12-31,STR_03,PRD_010,Ultrasonic Aroma Diffuser,Home & Kitchen,29.99,13.0,0,0,0,0,14.4,5.43,5,20,92,193,193,0.0,Critical / Stockout,True,2509.0
+2025-12-31,STR_04,PRD_004,Noise-Cancelling Headphones,Electronics,149.99,85.0,0,0,0,0,10.1,3.74,7,17,88,159,159,0.0,Critical / Stockout,True,13515.0
+2025-12-31,STR_04,PRD_007,Stretch Slim-Fit Denim Jeans,Apparel,49.99,22.0,0,0,0,0,21.81,6.97,7,31,184,337,337,0.0,Critical / Stockout,True,7414.0
+2025-12-31,STR_04,PRD_008,Cast Iron Skillet 10-inch,Home & Kitchen,34.99,16.5,0,0,0,0,11.45,4.63,6,19,88,168,168,0.0,Critical / Stockout,True,2772.0
+2025-12-31,STR_04,PRD_010,Ultrasonic Aroma Diffuser,Home & Kitchen,29.99,13.0,0,0,0,0,16.4,6.89,5,26,108,223,223,0.0,Critical / Stockout,True,2899.0
+2025-12-31,STR_03,PRD_004,Noise-Cancelling Headphones,Electronics,149.99,85.0,1,0,0,1,8.79,3.66,7,16,78,140,139,0.1,Reorder Required,True,11815.0
+2025-12-31,STR_04,PRD_001,Organic Whole Milk 1L,Groceries,3.99,2.2,17,0,0,17,64.43,20.39,2,48,177,628,611,0.3,Reorder Required,True,1344.2
+2025-12-31,STR_02,PRD_001,Organic Whole Milk 1L,Groceries,3.99,2.2,30,0,0,30,74.06,24.1,2,57,206,724,694,0.4,Reorder Required,True,1526.8
+2025-12-31,STR_02,PRD_005,Smart Fitness Tracker Band,Electronics,79.99,42.0,9,0,0,9,16.8,5.58,6,23,124,242,233,0.5,Reorder Required,True,9786.0
+2025-12-31,STR_03,PRD_007,Stretch Slim-Fit Denim Jeans,Apparel,49.99,22.0,11,0,0,11,17.84,5.98,7,27,152,277,266,0.6,Reorder Required,True,5852.0
+2025-12-31,STR_04,PRD_003,Greek Honey Yogurt 500g,Groceries,4.25,2.3,23,0,0,23,40.68,12.74,3,37,160,444,421,0.6,Reorder Required,True,968.3
+2025-12-31,STR_01,PRD_001,Organic Whole Milk 1L,Groceries,3.99,2.2,87,0,0,87,81.59,29.31,2,69,233,804,717,1.1,Reorder Required,True,1577.4
+2025-12-31,STR_01,PRD_002,Artisan Sourdough Bread,Groceries,4.5,2.0,97,0,0,97,69.15,22.05,2,52,191,675,578,1.4,Reorder Required,True,1156.0
+2025-12-31,STR_03,PRD_001,Organic Whole Milk 1L,Groceries,3.99,2.2,90,0,0,90,58.28,21.5,2,51,168,576,486,1.5,Reorder Required,True,1069.2
+2025-12-31,STR_02,PRD_003,Greek Honey Yogurt 500g,Groceries,4.25,2.3,92,0,0,92,45.59,12.63,3,36,173,492,400,2.0,Reorder Required,True,920.0
+2025-12-31,STR_02,PRD_010,Ultrasonic Aroma Diffuser,Home & Kitchen,29.99,13.0,39,0,0,39,18.23,5.56,5,21,113,240,201,2.1,Reorder Required,True,2613.0
+2025-12-31,STR_03,PRD_009,Ceramic Glazed Coffee Mug,Home & Kitchen,12.5,4.5,47,0,0,47,20.96,7.48,4,25,109,256,209,2.2,Reorder Required,True,940.5
+2025-12-31,STR_03,PRD_008,Cast Iron Skillet 10-inch,Home & Kitchen,34.99,16.5,27,0,0,27,9.98,3.68,6,15,75,145,118,2.7,Reorder Required,True,1947.0
+2025-12-31,STR_01,PRD_010,Ultrasonic Aroma Diffuser,Home & Kitchen,29.99,13.0,63,0,0,63,21.06,7.24,5,27,133,280,217,3.0,Reorder Required,True,2821.0
+2025-12-31,STR_04,PRD_005,Smart Fitness Tracker Band,Electronics,79.99,42.0,51,0,0,51,15.32,5.2,6,21,113,221,170,3.3,Reorder Required,True,7140.0
+2025-12-31,STR_01,PRD_003,Greek Honey Yogurt 500g,Groceries,4.25,2.3,173,0,0,173,49.39,14.15,3,41,190,535,362,3.5,Reorder Required,False,832.6
+2025-12-31,STR_02,PRD_006,Classic Cotton Crew T-Shirt,Apparel,19.99,8.5,135,0,0,135,36.83,11.75,5,44,229,486,351,3.7,Reorder Required,True,2983.5
+2025-12-31,STR_04,PRD_006,Classic Cotton Crew T-Shirt,Apparel,19.99,8.5,120,0,0,120,32.81,9.88,5,37,202,431,311,3.7,Reorder Required,True,2643.5
+2025-12-31,STR_01,PRD_008,Cast Iron Skillet 10-inch,Home & Kitchen,34.99,16.5,54,0,0,54,14.31,5.15,6,21,107,208,154,3.8,Reorder Required,True,2541.0
+2025-12-31,STR_04,PRD_009,Ceramic Glazed Coffee Mug,Home & Kitchen,12.5,4.5,104,0,0,104,24.75,6.78,4,23,122,296,192,4.2,Reorder Required,False,864.0
+2025-12-31,STR_02,PRD_008,Cast Iron Skillet 10-inch,Home & Kitchen,34.99,16.5,51,0,0,51,11.98,4.35,6,18,90,174,123,4.3,Reorder Required,True,2029.5

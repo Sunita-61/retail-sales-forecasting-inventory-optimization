@@ -142,3 +142,32 @@ def test_estimate_demand_parameters_stockout_adjustment():
     assert res_uncensored.iloc[0]["avg_daily_demand"] == 11.0
 
 
+def test_generate_replenishment_recommendations_stockout_adjustment():
+    """Verify generate_replenishment_recommendations increases target stock when stockout adjustment is enabled."""
+    import pandas as pd
+    from src.inventory.reorder_recommendations import generate_replenishment_recommendations
+
+    df = pd.DataFrame({
+        "date": pd.date_range("2025-01-01", periods=10, freq="D"),
+        "store_id": "STR_01",
+        "product_id": "PRD_001",
+        "product_name": "Test Product",
+        "category": "Test Category",
+        "unit_price": 50.0,
+        "unit_cost": 30.0,
+        "lead_time_days": 3,
+        "on_hand_stock": [20] * 10,
+        "stock_received": [0] * 10,
+        "units_sold": [10, 10, 0, 0, 10, 10, 10, 10, 10, 10],
+        "stockout_units": [0, 0, 15, 15, 0, 0, 0, 0, 0, 0],
+    })
+
+    # When adjust_stockouts=False, avg demand = 8.0
+    rec_censored = generate_replenishment_recommendations(df, save_outputs=False, adjust_stockouts=False)
+    # When adjust_stockouts=True, avg demand = 11.0
+    rec_adjusted = generate_replenishment_recommendations(df, save_outputs=False, adjust_stockouts=True)
+
+    assert rec_adjusted.iloc[0]["avg_daily_demand"] > rec_censored.iloc[0]["avg_daily_demand"]
+    assert rec_adjusted.iloc[0]["reorder_point"] > rec_censored.iloc[0]["reorder_point"]
+
+

@@ -12,7 +12,7 @@
 An independent, rigorous technical validation audit of the Retail Sales Forecasting & Inventory Optimization System was conducted across all codebase components, data artifacts, machine learning models, and inventory formulas.
 
 ### Summary Assessment
-* **Automated Tests**: **31 / 31 tests passed** (including 5 new regression tests added during this audit).
+* **Automated Tests**: **34 / 34 tests passed** (including 8 new regression tests added across the validation audits).
 * **Dataset Integrity**: Exactly **29,240 records** across 4 stores and 10 products over 731 days (2024-01-01 to 2025-12-31). 100% reproducible with fixed random seed 42. Zero null values, zero duplicate keys, zero negative inventory.
 * **Forecasting Reproducibility**: Champion model (**Random Forest Regressor**) reproduced on validation set with **WAPE = 19.99%** (MAE: 5.365 units, RMSE: 7.879 units, $R^2$: 0.853), outperforming Ridge Regression (WAPE 21.17%), 7-Day Moving Average (WAPE 26.23%), and Seasonal Naive (WAPE 27.99%). Held-out test performance confirmed at **WAPE = 25.77%**.
 * **Key Defects Identified & Resolved**:
@@ -21,7 +21,9 @@ An independent, rigorous technical validation audit of the Retail Sales Forecast
   3. *Missing Path Import* in `src/data/load_data.py`: Added `from pathlib import Path` to allow calling `load_raw_data(filepath)` with string or Path arguments.
   4. *Script sys.path Resolution* in `scripts/`: Added root directory insertion to `sys.path` so scripts can be invoked directly from any shell directory.
   5. *Uncertainty Interval Calibration Clarification* in `src/forecasting/predict.py`: Labeled and implemented as an **Empirical Residual Uncertainty Band (~90% normal approximation)** using measured validation residual variance, with programmatic verification that $\text{lower\_bound} \le \text{upper\_bound}$ and $\text{lower\_bound} \ge 0$.
-* **Overall Audit Recommendation**: **PASS (GO FOR PORTFOLIO PUBLICATION)**.
+  6. *Stockout-Adjusted Inventory Replenishment Pipeline* in `src/inventory/reorder_recommendations.py`: Added and enabled `adjust_stockouts=True` by default, un-censoring demand velocity for inventory safety stock and ROP sizing while keeping `units_sold` as the model training target.
+  7. *Forecast Demonstration Horizon Labeling (Option A)*: Formally labeled forecast horizon (`2026-01-01` to `2026-01-30`) as a post-historical demonstration simulation succeeding the 2-year cutoff (`2025-12-31`).
+* **Overall Audit Recommendation**: **PASS (GO FOR PORTFOLIO PUBLICATION - READY)**.
 
 ---
 
@@ -326,4 +328,28 @@ tests/test_preprocessing.py ....                                         [100%]
   * Added regression test `test_calculate_interval_coverage` and bound ordering test `test_uncertainty_bounds_ordering` in `tests/test_forecasting.py`.
 * **Remaining Limitation**:
   * The uncertainty spread is currently constant across the 30-day horizon; for long horizons, conformal prediction or horizon-dependent quantile regression would provide expanding coverage bands.
+
+### 16.4 Historical Simulation Horizon & Forecast Date Alignment (Option A Resolution)
+* **Context**:
+  * The historical retail dataset covers `2024-01-01` through `2025-12-31` (731 consecutive days, exactly 2 complete leap-year-aligned calendar years).
+  * The generated future forecast spans `2026-01-01` through `2026-01-30` (30 days, 1,200 records).
+  * Given that the current execution date is `2026-10-18`, the project evaluated **Option A (Historical Simulation Study)** vs **Option B (Synthetic Dataset Extension)**.
+* **Decision**: **Option A Selected as Defensible and Architecturally Sound**.
+  * Extending synthetic data to October 2026 would disrupt clean two-year annual seasonality (creating an incomplete 10-month fragment in Year 3), shift all temporal train/val/test splits, and obscure the clean leap-year calendar alignment.
+  * Option A explicitly characterizes the 30-day forecast as a **Post-Historical Demonstration Horizon**. The Streamlit dashboard, executive landing page, CLI scripts, and documentation now clearly display the historical cutoff (`2025-12-31`) and forecast window (`2026-01-01` to `2026-01-30`).
+
+### 16.5 End-to-End Stockout Adjustment in Inventory Replenishment Pipeline
+* **Context**:
+  * In retail operations, observable Point-of-Sale sales (`units_sold`) are censored whenever on-hand stock reaches zero. Sizing replenishment strictly on `units_sold` leads to an under-replenishment spiral where past stockouts depress future reorder points.
+* **Implementation & Resolution**:
+  * Model training strictly adheres to `units_sold` (observable POS transactions) to maintain integrity and prevent synthetic label contamination.
+  * In `src/inventory/reorder_recommendations.py`, the parameter `adjust_stockouts: bool = True` was added to `generate_replenishment_recommendations` and passed to `estimate_demand_parameters`.
+  * When `adjust_stockouts=True`, demand is un-censored as $\text{effective\_demand} = \text{units\_sold} + \text{stockout\_units}$ over the 60-day historical window.
+  * **Empirical Impact**:
+    * Mean daily demand across 40 series increases from 31.37 to 36.00 units/day (recovering 32,190 lost units across 2,071 stockout days).
+    * Across the 40 evaluated SKUs: 33 actionable reorders recommended, 10,157 total units to reorder, estimated inventory investment: $154,704.90.
+  * **Test Coverage**: Added `test_generate_replenishment_recommendations_stockout_adjustment` in `tests/test_inventory.py` to ensure regression protection.
+* **Remaining Limitation**:
+  * Unconstrained demand estimation relies on the recorded `stockout_units` field. In physical brick-and-mortar retail lacking virtual abandoned basket tracking, latent unconstrained demand must be statistically modeled using Tobit censored regression or survival analysis.
+
 

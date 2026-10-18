@@ -26,6 +26,7 @@ def generate_replenishment_recommendations(
     save_outputs: bool = True,
     service_level_z: float = SERVICE_LEVEL_Z_SCORE,
     review_period_days: int = REVIEW_PERIOD_DAYS,
+    adjust_stockouts: bool = True,
 ) -> pd.DataFrame:
     """Generate store-level replenishment recommendations based on inventory position and demand.
 
@@ -37,20 +38,27 @@ def generate_replenishment_recommendations(
         Future forecast predictions. If provided, future demand rate can be factored in.
     save_outputs : bool
         Whether to export results to outputs/inventory and outputs/recommendations.
+    service_level_z : float
+        Normal distribution z-score for desired cycle service level.
+    review_period_days : int
+        Review period interval in days.
+    adjust_stockouts : bool
+        If True and stockout_units is available, un-censors demand (units_sold + stockout_units)
+        to prevent under-sizing safety stock and ROP due to past stockouts. Default is True.
 
     Returns
     -------
     pd.DataFrame
         Detailed replenishment recommendations table.
     """
-    logger.info("Generating inventory replenishment recommendations...")
+    logger.info("Generating inventory replenishment recommendations (adjust_stockouts=%s)...", adjust_stockouts)
 
     df_copy = sales_df.copy()
     df_copy["date"] = pd.to_datetime(df_copy["date"])
     latest_date = df_copy["date"].max()
 
-    # 1. Estimate demand parameters
-    demand_stats = estimate_demand_parameters(df_copy, window_days=60)
+    # 1. Estimate demand parameters (stockout-adjusted effective demand by default)
+    demand_stats = estimate_demand_parameters(df_copy, window_days=60, adjust_stockouts=adjust_stockouts)
 
     # 2. Extract latest inventory state for each store-product series
     latest_state = (

@@ -17,7 +17,8 @@ from src.config import FORECASTS_FILE, PROCESSED_DATA_FILE
 st.set_page_config(page_title="Sales Forecasting | RetailIQ", page_icon="🔮", layout="wide")
 
 st.title("🔮 Predictive Demand & Sales Forecasting")
-st.markdown("Autoregressive multi-step recursive forecasting delivering 30-day forward demand projections with 90% confidence bands.")
+st.markdown("Autoregressive multi-step recursive forecasting delivering a 30-day post-historical demonstration horizon (2026-01-01 through 2026-01-30).")
+st.info("📅 **Historical Demonstration Horizon (Option A)**: Historical data covers 2024-01-01 to 2025-12-31. Projections represent a simulated 30-day out-of-sample forecast for January 2026. Uncertainty bands reflect empirical residual bounds (~90% nominal calibration on validation).")
 
 if not FORECASTS_FILE.exists() or not PROCESSED_DATA_FILE.exists():
     st.error("Forecast data or historical data not found. Please run `python main.py` first.")
@@ -106,7 +107,7 @@ if "forecast_upper_90ci" in fc_item.columns and "forecast_lower_90ci" in fc_item
         line=dict(color="rgba(255,255,255,0)"),
         hoverinfo="skip",
         showlegend=True,
-        name="90% Prediction Interval",
+        name="Empirical Uncertainty Band (~90% Nominal)",
     ))
 
 # Vertical line dividing history and forecast
