@@ -1,0 +1,5 @@
+Model,MAE,RMSE,WAPE (%),R2
+Random Forest Regressor,5.365,7.879,19.99,0.853
+Ridge Regression,5.682,8.187,21.17,0.841
+7-Day Moving Average,7.039,10.201,26.23,0.753
+Seasonal Naive (Lag 7),7.51,10.843,27.99,0.721
