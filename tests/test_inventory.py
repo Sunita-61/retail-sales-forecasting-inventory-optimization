@@ -119,3 +119,26 @@ def test_evaluate_inventory_row_negative_inputs_clamped():
     assert result["inventory_position"] == 0
     assert result["inventory_status"] == "Critical / Stockout"
 
+
+def test_estimate_demand_parameters_stockout_adjustment():
+    """Verify estimate_demand_parameters un-censors demand when adjust_stockouts=True."""
+    import pandas as pd
+    from src.inventory.demand_estimation import estimate_demand_parameters
+
+    df = pd.DataFrame({
+        "date": pd.date_range("2025-01-01", periods=10, freq="D"),
+        "store_id": "STR_01",
+        "product_id": "PRD_001",
+        "units_sold": [10, 10, 0, 0, 10, 10, 10, 10, 10, 10],  # 2 days zero sales due to stockouts
+        "stockout_units": [0, 0, 15, 15, 0, 0, 0, 0, 0, 0],     # 15 units demanded each day
+    })
+
+    # Standard (units_sold): mean is (80)/10 = 8.0
+    res_censored = estimate_demand_parameters(df, window_days=10, adjust_stockouts=False)
+    assert res_censored.iloc[0]["avg_daily_demand"] == 8.0
+
+    # Adjusted (units_sold + stockout_units): mean is (80 + 30)/10 = 11.0
+    res_uncensored = estimate_demand_parameters(df, window_days=10, adjust_stockouts=True)
+    assert res_uncensored.iloc[0]["avg_daily_demand"] == 11.0
+
+

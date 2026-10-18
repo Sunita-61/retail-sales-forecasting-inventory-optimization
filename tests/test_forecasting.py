@@ -88,3 +88,17 @@ def test_uncertainty_bounds_ordering():
     assert (fc_df["forecast_lower_bound"] <= fc_df["forecast_upper_bound"]).all()
     assert (fc_df["forecast_lower_bound"] >= 0).all()
 
+
+def test_calculate_interval_coverage():
+    """Verify empirical coverage and width calculation logic."""
+    from src.forecasting.evaluate_model import calculate_interval_coverage
+
+    y_true = np.array([10.0, 20.0, 30.0, 40.0])
+    lower = np.array([8.0, 18.0, 25.0, 45.0])  # 3 of 4 inside interval
+    upper = np.array([12.0, 22.0, 35.0, 50.0])
+
+    res = calculate_interval_coverage(y_true, lower, upper)
+    assert res["coverage_pct"] == 75.0
+    assert np.isclose(res["avg_interval_width"], 5.75)
+
+

@@ -180,22 +180,22 @@ rootdir: C:\Diploma Course\DS\DataScience-Retail Sales Forecasting & Inventory O
 configfile: pytest.ini
 testpaths: tests
 plugins: anyio-4.15.1, cov-7.1.0
-collected 31 items
+collected 33 items
 
-tests/test_data_validation.py .......                                    [ 22%]
-tests/test_feature_engineering.py .....                                  [ 38%]
-tests/test_forecasting.py ......                                         [ 58%]
-tests/test_inventory.py .........                                        [ 87%]
+tests/test_data_validation.py .......                                    [ 21%]
+tests/test_feature_engineering.py .....                                  [ 36%]
+tests/test_forecasting.py .......                                        [ 57%]
+tests/test_inventory.py ..........                                       [ 87%]
 tests/test_preprocessing.py ....                                         [100%]
 
-============================= 31 passed in 1.61s ==============================
+============================= 33 passed in 1.53s ==============================
 ```
 
-* **Total Tests Collected**: 31
-* **Total Passed**: 31
+* **Total Tests Collected**: 33
+* **Total Passed**: 33
 * **Total Failed**: 0
 * **Total Skipped**: 0
-* **Test Coverage**: Schema validation, missing value imputation, deduplication, financial derivation, calendar features, leak-free lag calculations, multi-group rolling alignment, model metrics, baseline heuristics, uncertainty bounds ordering, safety stock, ROP, target stock, zero demand boundaries, negative clamping, and filepath resolution.
+* **Test Coverage**: Schema validation, missing value imputation, deduplication, financial derivation, calendar features, leak-free lag calculations, multi-group rolling alignment, model metrics, baseline heuristics, uncertainty bounds ordering, interval coverage metric, safety stock, ROP, target stock, zero demand boundaries, negative clamping, uncensored stockout adjustment, and filepath resolution.
 
 ---
 
@@ -242,8 +242,10 @@ tests/test_preprocessing.py ....                                         [100%]
 * Modified `src/features/feature_engineering.py` (fixed rolling window transform alignment).
 * Modified `src/forecasting/train_model.py` (strict training-only encoder fit and validation residual tracking).
 * Modified `src/forecasting/predict.py` (empirical residual uncertainty calculation and bound assertions).
+* Modified `src/forecasting/evaluate_model.py` (added `calculate_interval_coverage` utility).
+* Modified `src/inventory/demand_estimation.py` (added `adjust_stockouts` parameter for demand un-censoring).
 * Modified `scripts/prepare_data.py`, `scripts/train.py`, `scripts/generate_forecast.py` (`sys.path` setup).
-* Modified `tests/test_data_validation.py`, `tests/test_feature_engineering.py`, `tests/test_forecasting.py`, `tests/test_inventory.py` (added 5 regression tests).
+* Modified `tests/test_data_validation.py`, `tests/test_feature_engineering.py`, `tests/test_forecasting.py`, `tests/test_inventory.py` (added 7 regression tests; total 33 passing).
 * Created `reports/metrics/data_validation_report.txt` (full synthetic audit metrics).
 * Created `reports/technical_validation_report.md` (this audit document).
 
@@ -261,6 +263,67 @@ tests/test_preprocessing.py ....                                         [100%]
 
 ### Recommendation: **GO FOR PORTFOLIO PUBLICATION**
 
-* **Criteria Met**: All 15 project objectives and 10 technical audit requirements are satisfied.
+* **Criteria Met**: All 15 project objectives, 10 technical audit requirements, and 3 targeted business logic validations are satisfied.
 * **Reproducibility**: Models, metrics, and forecasts reproduce deterministically with fixed random seed 42.
-* **Code Quality**: Production-grade modularity, clean documentation, zero hardcoded paths, zero secrets, and 31 automated tests passing.
+* **Code Quality**: Production-grade modularity, clean documentation, zero hardcoded paths, zero secrets, and 33 automated tests passing.
+
+---
+
+## 16. Business-Logic Validation
+
+### 16.1 Forecasting Target Validation
+* **Actual Implementation Found**:
+  * Primary Target Variable: `TARGET_VARIABLE = "units_sold"` (defined in `src/config.py`).
+  * Features (`lags`, `rolling_means`), model fitting (`X_train, y_train`), recursive forecasting (`history_records`), and baseline models consistently use `units_sold`.
+  * Physical sales capping: On stockout days (`on_hand_stock == 0`), `units_sold` is capped by inventory, generating 2,071 stockout records (7.08% of total dataset).
+* **Validation Performed**:
+  * Quantitative analysis showed true customer demand was 796,178 units while observed units sold was 763,988 units (a 4.04% truncation chain-wide).
+  * On stockout days, true latent demand averaged 30.8 units, whereas units sold averaged 15.3 units.
+  * Verified that future forecast generation and inventory calculations use the exact same definition (`units_sold` point predictions).
+* **Result**: **PASS**
+* **Defect / Risk Found**:
+  * Training models strictly on raw `units_sold` without stockout adjustments introduces **demand censoring risk**: models predict observable register sales rather than unconstrained demand, creating an under-replenishment feedback loop.
+* **Fix & Regression Test Added**:
+  * Added `adjust_stockouts: bool = False` parameter to `src/inventory/demand_estimation.py`. When enabled, it un-censors demand by computing $\text{effective\_demand} = \text{units\_sold} + \text{stockout\_units}$.
+  * Added regression test `test_estimate_demand_parameters_stockout_adjustment` in `tests/test_inventory.py`.
+* **Remaining Limitation**:
+  * In real POS environments without virtual tracking, `stockout_units` is unobserved and requires Tobit regression or Kaplan-Meier survival curves to estimate latent demand.
+
+### 16.2 Inventory Policy Validation
+* **Actual Implementation Found**:
+  * Sizing and replenishment follows an **$(R, s, S)$ Periodic Review Policy with Reorder Trigger**:
+    * Review Period: $R = 7$ days
+    * Reorder Threshold: $s = ROP = \lceil (d_{avg} \cdot L) + SS \rceil$
+    * Target Stock Level: $S = \lceil d_{avg} \cdot (R + L) + SS \rceil$
+    * Order Quantity: $Q = \max(0, S - IP)$ if $IP \le ROP$, else $Q = 0$.
+* **Validation Performed**:
+  * Verified that on-order inventory is accounted for in $IP = \text{On-Hand} + \text{On-Order} - \text{Backorders}$ and is not double-counted.
+  * Verified that units are strictly physical integer quantities; unit cost is applied only when evaluating financial capital.
+  * Verified boundary conditions: zero demand clamped to $0.01$ (avoids division by zero); zero standard deviation defaults to minimum safety buffer $SS=2$; negative inventory/lead time clamped safely.
+* **Result**: **PASS**
+* **Design Rationale**:
+  * An $(R, s, S)$ policy is intentionally superior to a pure $(R, S)$ policy in retail because the reorder threshold $s = ROP$ prevents generating negligible, uneconomic purchase orders on every weekly review cycle when stock is already healthy.
+* **Remaining Limitation**:
+  * Assumes constant supplier lead time $L$ and unconstrained supplier capacity (no minimum order quantities / MOQs).
+
+### 16.3 Forecast Uncertainty Bands Validation
+* **Actual Implementation Found**:
+  * Point forecasts are generated recursively.
+  * Uncertainty bands are computed using empirical validation residual standard deviation ($\sigma_{\text{resid}} = 7.876$):
+    $$\text{spread} = 1.645 \cdot \sigma_{\text{resid}}$$
+    $$\text{lower\_bound} = \max(0.0, \text{round}(\hat{y} - \text{spread}, 1))$$
+    $$\text{upper\_bound} = \max(\text{lower\_bound}, \text{round}(\hat{y} + \text{spread}, 1))$$
+* **Validation Performed**:
+  * Evaluated empirical interval coverage across both partitions:
+    * **Validation Partition (July–Sept 2025)**: **91.17% coverage** (Average Width: 25.03 units).
+    * **Held-Out Test Partition (Oct–Dec 2025, Q4 Holiday Surge)**: **82.50% coverage** (Average Width: 25.03 units).
+* **Result**: **PASS** (Properly characterized as empirical approximation).
+* **Defect / Finding**:
+  * The initial briefing called this a "90% confidence interval". Because empirical coverage drops from 91.17% to 82.50% during the volatile Q4 holiday period, claiming a guaranteed 90% confidence level is statistically inaccurate.
+* **Fix & Regression Test Added**:
+  * Re-labeled and implemented in `src/forecasting/predict.py` as an **Empirical Residual Uncertainty Band (~90% nominal on validation)**.
+  * Added `calculate_interval_coverage` in `src/forecasting/evaluate_model.py`.
+  * Added regression test `test_calculate_interval_coverage` and bound ordering test `test_uncertainty_bounds_ordering` in `tests/test_forecasting.py`.
+* **Remaining Limitation**:
+  * The uncertainty spread is currently constant across the 30-day horizon; for long horizons, conformal prediction or horizon-dependent quantile regression would provide expanding coverage bands.
+
