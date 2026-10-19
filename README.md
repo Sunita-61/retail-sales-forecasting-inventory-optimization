@@ -14,7 +14,7 @@ An enterprise-grade, end-to-end data science and supply chain optimization platf
 Retail inventory management balances two opposing financial forces: **stockouts** (resulting in lost sales, damaged customer loyalty, and forfeited profits) and **overstocks** (incurring capital holding costs, obsolescence, and warehouse crowding).
 
 This repository implements an autonomous system that bridges **predictive machine learning time-series forecasting** with **stochastic inventory replenishment control**:
-* **Data Simulation & Ingestion**: Generates reproducible daily retail data across multiple stores and categories with trend, seasonality, promotions, and lead times.
+* **Data Simulation & Ingestion**: Generates reproducible daily synthetic retail data across multiple stores and categories (29,240 records, 763,988 units sold, and $15,711,941.55 in gross sales) with trend, seasonality, promotions, and lead times.
 * **Leakage-Free Feature Engineering**: Constructs temporal calendar encodings, cyclical transforms, strictly past lags ($t-1, \dots, t-28$), and rolling window statistics without lookahead data leakage.
 * **Competitive Model Benchmarking**: Compares Seasonal Naive, Moving Average, Ridge Regression, and Random Forest Regressor models on identical validation and test partitions.
 * **30-Day Forward Autoregressive Forecasting**: Generates recursive multi-step daily projections with 90% confidence bands.
@@ -42,6 +42,8 @@ Retail-Sales-Forecasting-Inventory-Optimization/
 │   ├── raw/                                # Raw synthetic observations (29,240 rows)
 │   ├── processed/                          # Cleaned and feature-augmented dataset
 │   └── sample/                             # Representative sample CSV
+│
+├── images/                                 # UI Showcase Screenshots (Dashboard & Analytics)
 │
 ├── notebooks/                              # Jupyter Analytical Portfolio Notebooks
 │   ├── 01_data_understanding.ipynb         # Data ingestion, schema, and statistics
@@ -152,6 +154,34 @@ Optional CLI flags:
 streamlit run app/dashboard.py
 ```
 Open your browser at `http://localhost:8501` to explore the interactive visual analytics.
+
+---
+
+## 🖥️ Interactive Dashboard Showcase
+
+The system provides an enterprise-grade multi-page Streamlit web dashboard demonstrating retail demand analytics and replenishment policies on the synthetic retail dataset. Below are captures from the live analytical platform:
+
+### 1. Executive Overview & Inventory Health
+![Executive Overview Dashboard](images/01_dashboard_executive_overview.png)
+*Figure 1: Executive KPI overview showing 2-year chain aggregates ($15,711,941.55 total revenue across 763,988 units sold in 29,240 records), the historical cutoff (2025-12-31), post-historical demonstration forecast horizon (2026-01-01 to 2026-01-30), daily revenue trend with 7-day moving average, and current inventory health status (33 pending reorders).*
+
+---
+
+### 2. Sales & Demand Velocity Cockpit
+![Sales & Demand Trends](images/02_sales_analysis_trends.png)
+*Figure 2: Time-series sales analysis tracking historical demand velocity, dynamic store/category filters, and category revenue share (Electronics leading at 40.5%). Unmet customer demand due to historical stockouts is tracked at 32,190 lost units.*
+
+---
+
+### 3. Store Dynamics, Seasonality & Promotional Lift
+![Seasonality and Promotions](images/03_seasonality_and_promotions.png)
+*Figure 3: Multi-dimensional exploratory analytics illustrating store revenue comparisons, day-of-week seasonality (Friday–Sunday volume surges), top-selling revenue-generating SKUs, and promotional demand lift.*
+
+---
+
+### 4. Granular Transaction Exploration
+![Filtered Observations Data Table](images/04_filtered_data_table.png)
+*Figure 4: Granular observation table displaying transaction-level records (store, SKU, unit price, units sold, monetary sales, on-hand stock, and promotion flags) with real-time CSV export.*
 
 ---
 
